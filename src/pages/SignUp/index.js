@@ -1,33 +1,26 @@
 import React, { useState } from 'react';
 import { Platform } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
 import {
   Background,
   Container,
-  Logo,
   AreaInput,
   Input,
   SubmitButton,
-  SubmitText,
-  Link,
-  LinkText
+  SubmitText
 }
-  from './styles';
+  from '../SignIn/styles';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const navigation = useNavigation();
+  const [nome, setNome] = useState('');
 
   const logo = require('../../assets/Logo.png');
 
   const getEmail = text => setEmail(text);
   const getPassword = text => setPassword(text);
-
-  const goSignUp = () => navigation.navigate('SignUp');
+  const getNome = text => setNome(text);
 
   const behaviorPlataform = Platform.OS === 'ios' ? 'padding' : '';
 
@@ -37,7 +30,16 @@ export default function SignIn() {
         bahavior={behaviorPlataform}
         enabled
       >
-        <Logo source={logo} />
+
+        <AreaInput>
+          <Input
+            placeholder='Nome'
+            autoCorrect={false}
+            autoCapitalize='none'
+            value={nome}
+            onChangeText={getNome}
+          />
+        </AreaInput>
 
         <AreaInput>
           <Input
@@ -60,12 +62,9 @@ export default function SignIn() {
         </AreaInput>
 
         <SubmitButton>
-          <SubmitText>Acessar</SubmitText>
+          <SubmitText>Cadastrar</SubmitText>
         </SubmitButton>
 
-        <Link onPress={goSignUp} >
-          <LinkText>Criar uma conta</LinkText>
-        </Link>
 
       </Container>
     </Background>
