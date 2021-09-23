@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Platform } from 'react-native';
+
+import { AuthContext } from '../../contexts/auth';
 
 import {
   Background,
@@ -15,8 +17,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nome, setNome] = useState('');
-
-  const logo = require('../../assets/Logo.png');
+  const { signUp } = useContext(AuthContext);
 
   const getEmail = text => setEmail(text);
   const getPassword = text => setPassword(text);
@@ -24,7 +25,12 @@ export default function SignIn() {
 
   const behaviorPlataform = Platform.OS === 'ios' ? 'padding' : '';
 
+  function handleSignUp() {
+    signUp(email, password, nome);
+  }
+
   return (
+
     <Background>
       <Container
         bahavior={behaviorPlataform}
@@ -61,7 +67,7 @@ export default function SignIn() {
           />
         </AreaInput>
 
-        <SubmitButton>
+        <SubmitButton onPress={handleSignUp}>
           <SubmitText>Cadastrar</SubmitText>
         </SubmitButton>
 
