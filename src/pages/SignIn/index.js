@@ -21,9 +21,7 @@ import { AuthContext } from '../../contexts/auth';
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { user } = useContext(AuthContext);
-
+  const { signIn } = useContext(AuthContext);
   const navigation = useNavigation();
 
   const logo = require('../../assets/Logo.png');
@@ -34,8 +32,8 @@ export default function SignIn() {
 
   const behaviorPlataform = Platform.OS === 'ios' ? 'padding' : '';
 
-  function handleLogin(){
-    console.log(user);
+  function handleLogin() {
+    signIn(email, password);
   }
 
 
@@ -64,6 +62,7 @@ export default function SignIn() {
             autoCapitalize='none'
             value={password}
             onChangeText={getPassword}
+            secureTextEntry={true}
           />
         </AreaInput>
 
