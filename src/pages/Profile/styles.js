@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const Container = styled.View`
     flex: 1;
     background-color: #131313;
-    align-items: center;
 `;
 
 export const Nome = styled.Text`
@@ -22,6 +21,7 @@ export const NewLink = styled.TouchableOpacity`
     height: 45px;
     border-radius: 10px;
     margin-bottom: 10px;
+    margin-left: 20px;
 `;
 
 export const NewText = styled.Text`
@@ -37,6 +37,7 @@ export const Logout = styled.TouchableOpacity`
     width: 90%;
     height: 45px;
     border-radius: 10px;
+    margin-left: 20px;
 `;
 
 export const LogoutText = styled.Text`
