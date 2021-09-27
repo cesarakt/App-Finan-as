@@ -30,7 +30,6 @@ export default function Home() {
   const render = ({ item }) => <HistoricList data={item} />
 
   const nome = user && user.nome;
-  const saldo = user && user.saldo;
 
   function deslogar() {
     signOut();
@@ -42,7 +41,7 @@ export default function Home() {
 
       <Container>
         <Nome>{nome}</Nome>
-        <Saldo>R$ 123,00</Saldo>
+        <Saldo>R$ 100,00</Saldo>
       </Container>
 
       <Title>Ultimas Movimentações</Title>
