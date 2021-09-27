@@ -9,9 +9,10 @@ import {
   Logout,
   LogoutText
 }
-  from './styles';
+from './styles';
 
 import { useNavigation } from '@react-navigation/native';
+import Header from '../../components/Header';
 
 
 
@@ -26,6 +27,7 @@ export default function Profile() {
 
   return (
     <Container>
+      <Header />
       <Nome>
         {nome}
       </Nome>

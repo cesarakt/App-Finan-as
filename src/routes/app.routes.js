@@ -16,7 +16,8 @@ function AppRoutes() {
                     backgroundColor: '#171717'
                 },
                 drawerLabelStyle: {
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    fontSize: 18
                 },
                 drawerActiveTintColor: '#FFF',
                 drawerActiveBackgroundColor: '#00b94a',
