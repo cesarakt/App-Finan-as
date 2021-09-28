@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Platform } from 'react-native';
+import { Platform, ActivityIndicator } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -21,7 +21,7 @@ import { AuthContext } from '../../contexts/auth';
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signIn } = useContext(AuthContext);
+  const { signIn, loadingAuth } = useContext(AuthContext);
   const navigation = useNavigation();
 
   const logo = require('../../assets/Logo.png');
@@ -29,6 +29,13 @@ export default function SignIn() {
   const getEmail = text => setEmail(text);
   const getPassword = text => setPassword(text);
   const goSignUp = () => navigation.navigate('SignUp');
+
+  const showLoading = !loadingAuth ?
+    (
+      <SubmitText>Acessar</SubmitText>
+    ) : (
+      <ActivityIndicator size={27} color='#FFF' />
+    );
 
   const behaviorPlataform = Platform.OS === 'ios' ? 'padding' : '';
 
@@ -67,7 +74,7 @@ export default function SignIn() {
         </AreaInput>
 
         <SubmitButton onPress={handleLogin}>
-          <SubmitText>Acessar</SubmitText>
+          {showLoading}
         </SubmitButton>
 
         <Link onPress={goSignUp} >
