@@ -24,7 +24,7 @@ export const Saldo = styled.Text`
 `;
 
 export const Title = styled.Text`
-    margin-left: 15px;
+    margin-left: 5px;
     color: #00b94a;
     margin-bottom: 10px;
 `;
@@ -40,5 +40,10 @@ export const List = styled.FlatList.attrs({
     margin-right: 8px;
 `;
 
+export const AreaFilter = styled.View`
+flex-direction: row;
+margin-left: 15px;
+margin-bottom: 5px;
+`;
 
 

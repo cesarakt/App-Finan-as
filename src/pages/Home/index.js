@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Alert, Platform, TouchableOpacity } from 'react-native';
 
 import Header from '../../components/Header';
 import { AuthContext } from '../../contexts/auth';
@@ -8,20 +9,23 @@ import {
   Nome,
   Saldo,
   Title,
-  List
+  List,
+  AreaFilter
 }
   from './styles';
 
-import { format, isPast } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import HistoricList from '../../components/HistoricList';
 import firebase from '../../services/firebaseConnection';
-import { Alert } from 'react-native';
-
+import { MaterialIcons } from '@expo/vector-icons';
+import DatePicker from '../../components/DatePicker';
 
 export default function Home() {
   const { user } = useContext(AuthContext)
   const [historico, setHistorico] = useState([]);
   const [saldo, setSaldo] = useState(0);
+  const [newDate, setNewDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
   const key = item => item.key;
   const render = ({ item }) => <HistoricList data={item} deleteItem={handleDelete} />
@@ -29,7 +33,19 @@ export default function Home() {
   const nome = user && user.nome;
   const uid = user && user.uid;
   const saldoAtual = saldo.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-  const dataHoje = format(new Date, 'dd/MM/yyyy');
+  const onChange = (date) => {
+    setShow(Platform.OS === 'ios');
+    setNewDate(date);
+    console.log(date);
+  }
+
+  const showPickerDate = show && (
+    <DatePicker
+      onclose={handleClose}
+      date={newDate}
+      onChange={onChange}
+    />
+  )
 
   useEffect(() => {
     async function loadList() {
@@ -38,7 +54,7 @@ export default function Home() {
       });
 
       await firebase.database().ref('historico').child(uid)
-        .orderByChild('date').equalTo(format(new Date, 'dd/MM/yy'))
+        .orderByChild('date').equalTo(format(newDate, 'dd/MM/yyyy'))
         .limitToLast(10)
         .on('value', (snapshot) => {
           setHistorico([]);
@@ -57,10 +73,22 @@ export default function Home() {
     }
 
     loadList();
-  }, [])
+  }, [newDate])
 
   function handleDelete(data) {
-    if (isPast(new Date(data.date))) {
+
+    //Data do item
+    const [diaItem, mesItem, anoItem] = data.date.split('/');
+    const dateItem = new Date(`${anoItem}/${mesItem}/${diaItem}`);
+    console.log(dateItem);
+
+    //Data de hoje
+    const formatDiaHoje = format(new Date(), 'dd/MM/yyyy');
+    const [diaHoje, mesHoje, anoHoje] = formatDiaHoje.split('/');
+    const dateHoje = new Date(`${anoHoje}/${mesHoje}/${diaHoje}`);
+    console.log(dateHoje)
+
+    if (isBefore(dateItem, dateHoje)) {
       alert('Você não pode excluir uma movimentação antiga!');
       return;
     }
@@ -96,6 +124,14 @@ export default function Home() {
       })
   }
 
+  function handleShowPicker() {
+    setShow(true)
+  }
+
+  function handleClose() {
+    setShow(false);
+  }
+
   return (
     <Background>
       <Header />
@@ -105,8 +141,13 @@ export default function Home() {
         <Saldo>R$ {saldoAtual}</Saldo>
       </Container>
 
-      <Title>{dataHoje}</Title>
-      <Title>Ultimas Movimentações</Title>
+      <AreaFilter>
+        <TouchableOpacity onPress={() => handleShowPicker()}>
+          <MaterialIcons name='event' size={25} color='#FFF' />
+        </TouchableOpacity>
+        <Title>Ultimas Movimentações</Title>
+      </AreaFilter>
+
 
       <List
         showsVerticalScrollIndicator={false}
@@ -114,6 +155,8 @@ export default function Home() {
         keyExtractor={key}
         renderItem={render}
       />
+
+      {showPickerDate}
     </Background>
   );
 }
