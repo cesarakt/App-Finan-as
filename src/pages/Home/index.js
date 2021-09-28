@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import Header from '../../components/Header';
 import { AuthContext } from '../../contexts/auth';
@@ -12,24 +12,51 @@ import {
 }
   from './styles';
 
+import { format } from 'date-fns';
 import HistoricList from '../../components/HistoricList';
+import firebase from '../../services/firebaseConnection';
 
 
 export default function Home() {
   const { user } = useContext(AuthContext)
-  const [historico, setHistorico] = useState([
-    { key: '1', tipo: 'receita', valor: 1200 },
-    { key: '2', tipo: 'despesa', valor: 200 },
-    { key: '3', tipo: 'receita', valor: 40 },
-    { key: '4', tipo: 'despesa', valor: 89.65 },
-    { key: '5', tipo: 'receita', valor: 50 },
-    { key: '6', tipo: 'despesa', valor: 100 },
-  ]);
+  const [historico, setHistorico] = useState([]);
+  const [saldo, setSaldo] = useState(0);
 
   const key = item => item.key;
   const render = ({ item }) => <HistoricList data={item} />
 
   const nome = user && user.nome;
+  const uid = user && user.uid;
+  const saldoAtual = saldo.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+  useEffect(() => {
+    async function loadList() {
+      await firebase.database().ref('users').child(uid).on('value', (snapshot) => {
+        setSaldo(snapshot.val().saldo);
+      });
+
+      await firebase.database().ref('historico').child(uid)
+        .orderByChild('date').equalTo(format(new Date, 'dd/MM/yy'))
+        .limitToLast(10)
+        .on('value', (snapshot) => {
+          setHistorico([]);
+
+          snapshot.forEach((childItem) => {
+            let list = {
+              key: childItem.key,
+              tipo: childItem.val().tipo,
+              valor: childItem.val().valor
+            }
+
+            setHistorico(oldArray => [...oldArray, list].reverse());
+          })
+        })
+    }
+
+    loadList();
+  }, [])
+
+  console.log(saldo);
 
   function deslogar() {
     signOut();
@@ -41,7 +68,7 @@ export default function Home() {
 
       <Container>
         <Nome>{nome}</Nome>
-        <Saldo>R$ 100,00</Saldo>
+        <Saldo>R$ {saldoAtual}</Saldo>
       </Container>
 
       <Title>Ultimas Movimentações</Title>
