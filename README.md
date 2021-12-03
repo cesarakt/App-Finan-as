@@ -4,11 +4,11 @@
 
 ## Aplicação com as seguintes funcionalidade: 
 
-### Relação de usuário com a database com dados únicos
-### Manipulação de dados no banco com usuários únicos
-### Insert e delet de dados no banco de um usuário único usando o firebase com filtro no db.
-### Renderizações condicionais e componentização em tela
-### Uso de ContextAPI para transportar contextos dentro das rotas de navegação
+#### - Relação de usuário com a database com dados únicos
+#### - Manipulação de dados no banco com usuários únicos
+#### - Insert e delet de dados no banco de um usuário único usando o firebase com filtro no db.
+#### - Renderizações condicionais e componentização em tela
+#### - Uso de ContextAPI para transportar contextos dentro das rotas de navegação
 
 ## Ferramentas Utilizadas
 
